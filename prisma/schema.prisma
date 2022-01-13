@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Sex {
+  PRIA
+  WANITA
+}
+
+enum KriteriaType {
+  RANGE
+  CATEGORIAL
+}
+
+enum Pekerjaan {
+  PETANI
+  SWASTA
+  PNS
+  LAIN
+}
+
+enum StatusKeluarga {
+  LENGKAP
+  YATIM_PIATU
+}
+
+enum JenisTempatTinggal {
+  RUMAH_SEDERHANA
+  RUMAH_MENENGAH
+}
+
+model Mahasiswa {
+  id  Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  nama String
+  nik String
+  noKk String
+  noKontak String
+  jk Sex
+  alamat  String
+  universitas String
+  prodi   String
+  pendidikan  String
+  semester  String
+
+  penilaian Penilaian @relation(fields: penilaianId, references: [id])
+  penilaianId Int
+}
+
+model Penilaian {
+  id  Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  mahasiswa Mahasiswa?
+
+  pendapatanKep Int
+  pekerjaan Pekerjaan
+  tanggungan Int
+  statusKeluarga StatusKeluarga
+  tempatTinggal JenisTempatTinggal
+}
