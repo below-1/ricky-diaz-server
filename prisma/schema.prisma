@@ -15,6 +15,12 @@ enum Sex {
   WANITA
 }
 
+enum JenjangPendidikan {
+  D3
+  S1
+  S2
+}
+
 enum Pekerjaan {
   PETANI
   SWASTA
@@ -55,15 +61,38 @@ model Mahasiswa {
   alamat  String
   universitas String
   prodi   String
-  pendidikan  String
+  pendidikan  JenjangPendidikan
   semester  String
 
-  statusBerkas StatusBerkas   @default(DRAFT)
-
-  penilaian Penilaian @relation(fields: penilaianId, references: [id])
-  penilaianId Int
+  penilaians Penilaian[]
 
   user User?
+}
+
+model Kriteria {
+  id  Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  nama String
+  core Boolean
+  bobot Decimal
+
+  subs  Subkriteria[]
+}
+
+model Subkriteria {
+  id  Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  nama String
+  bobot Int
+
+  kriteria Kriteria @relation(fields: kriteriaId, references: [id])
+  kriteriaId Int 
+
+  penilaians Penilaian[]
 }
 
 model Penilaian {
@@ -71,13 +100,11 @@ model Penilaian {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  mahasiswa Mahasiswa?
+  subkriteria Subkriteria @relation(fields: subkriteriaId, references: [id])
+  subkriteriaId Int
 
-  pendapatanKep Int
-  pekerjaan Pekerjaan
-  tanggungan Int
-  statusKeluarga StatusKeluarga
-  tempatTinggal JenisTempatTinggal
+  mahasiswa   Mahasiswa @relation(fields: mahasiswaId, references: [id])
+  mahasiswaId Int
 }
 
 model User {

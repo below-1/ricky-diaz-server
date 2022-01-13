@@ -15,10 +15,11 @@ const Xview = require('./xview')
 
 module.exports.createApp = () => {
 	const app = Fastify({
-		logger: {
-			prettyPrint: true,
-			prettifier
-		}
+		// logger: {
+		// 	prettyPrint: true,
+		// 	prettifier
+		// }
+		logger: false
 	});
 
 	app.register(fastifyRequestLogger);

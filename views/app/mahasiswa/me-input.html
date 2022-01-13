@@ -1,0 +1,82 @@
+{% extends "app/base.html" %}
+
+{% block content %}
+<section class="row">
+  <div class="col-12 col-md-6 mx-auto">
+    <div class="card">
+
+      <div class="card-header">
+        <h4 class="card-title">Input Data Mahasiswa</h4>
+      </div>
+
+      <div class="card-content">
+        <div class="card-body">
+          <form method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label class="form-label">Nama Mahasiswa</label>
+              <input type="text" class="form-control form-control-xl" name="nama" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Nomor Induk Kependudukan</label>
+              <input type="text" class="form-control form-control-xl" name="nik" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Nomor Induk Kependudukan</label>
+              <input type="text" class="form-control form-control-xl" name="nik" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Nomor KK</label>
+              <input type="text" class="form-control form-control-xl" name="noKk" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Nomor Kontak</label>
+              <input type="text" class="form-control form-control-xl" name="noKontak" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Jenis Kelamin</label>
+              <div class="form-check">
+                  <input class="form-check-input" type="radio" name="jk" value="PRIA">
+                  <label class="form-check-label" for="flexRadioDefault2">
+                      Laki - Laki
+                  </label>
+              </div>
+              <div class="form-check">
+                  <input class="form-check-input" type="radio" name="jk" value="WANITA">
+                  <label class="form-check-label" for="flexRadioDefault2">
+                      Perempuan
+                  </label>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Alamat</label>
+              <input type="text" class="form-control form-control-xl" name="noKontak" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Universitas</label>
+              <input type="text" class="form-control form-control-xl" name="noKontak" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Prodi</label>
+              <input type="text" class="form-control form-control-xl" name="noKontak" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Jenjang Pendidikan</label>
+              <select class="form-control form-control-xl" name="pendidikan" required>
+                <option value="D3">D3</option>
+                <option value="S1">S1</option>
+                <option value="S2">S2</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Semester</label>
+              <input type="text" class="form-control form-control-xl" name="noKontak" type="number" required>
+            </div>
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}

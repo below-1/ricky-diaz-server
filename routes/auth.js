@@ -25,6 +25,27 @@ module.exports = async (fastify) => {
 		}
 	});
 
+	fastify.get('/signup-mahasiswa', async (request, reply) => {
+		reply.view('auth/signup-mahasiswa', {
+		});
+	});
+
+	fastify.post('/signup-mahasiswa', {
+		preHandler: upload.none(),
+		handler: async (request, reply) => {
+			const { username, password } = request.body;
+			const hashedPassword = await bcrypt.hash(password, 4);
+			const admin = await db.user.create({
+				data: {
+					username,
+					password: hashedPassword,
+					role: 'MAHASISWA'
+				}
+			})
+			reply.redirect('/auth/login');
+		}
+	});
+
 	fastify.get('/login', {
 		handler: async (request, reply) => {
 			const err_username = request.gflash('err_username');
@@ -39,8 +60,6 @@ module.exports = async (fastify) => {
 	fastify.post('/login', {
 		preHandler: upload.none(),
 		handler: async (request, reply) => {
-			console.log('request.sessionStore');
-			console.log(request.sessionStore);
 			const payload = request.body;
 			// Find user
 			const { username, password } = payload;

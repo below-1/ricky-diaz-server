@@ -19,6 +19,20 @@
                 <input type="text" id="first-name" class="form-control" name="nama" required>
               </div>
               <div class="col-md-4">
+                <label>Bobot</label>
+              </div>
+              <div class="col-md-8 form-group">
+                <input type="number" min="1" max="100" id="first-name" 
+                  class="form-control {% if err_bobot %} is-invalid {% endif %}" 
+                  name="bobot" required>
+                {% if err_bobot %}
+                  <div class="invalid-feedback">
+                      <i class="bx bx-radio-circle"></i>
+                      {{ err_bobot }}
+                  </div>
+                {% endif %}
+              </div>
+              <div class="col-md-4">
                 <label>Tipe Kriteria</label>
               </div>
               <div class="col-md-8 form-group">
