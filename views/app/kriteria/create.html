@@ -12,12 +12,14 @@
         <form class="form form-horizontal" method="post" enctype="multipart/form-data">
           <div class="form-body">
             <div class="row">
+
               <div class="col-md-4">
                 <label>Nama Kriteria</label>
               </div>
               <div class="col-md-8 form-group">
                 <input type="text" id="first-name" class="form-control" name="nama" required>
               </div>
+
               <div class="col-md-4">
                 <label>Bobot</label>
               </div>
@@ -32,6 +34,26 @@
                   </div>
                 {% endif %}
               </div>
+
+              <div class="col-md-4">
+                <label>Profile Target</label>
+              </div>
+              <div class="col-md-8 form-group">
+                <input 
+                  type="number" 
+                  min="1" 
+                  max="5"
+                  class="form-control {% if err_target %} is-invalid {% endif %}" 
+                  name="target" 
+                  required>
+                {% if err_target %}
+                  <div class="invalid-feedback">
+                      <i class="bx bx-radio-circle"></i>
+                      {{ err_target }}
+                  </div>
+                {% endif %}
+              </div>
+
               <div class="col-md-4">
                 <label>Tipe Kriteria</label>
               </div>

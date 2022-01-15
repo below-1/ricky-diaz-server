@@ -1,0 +1,6 @@
+{% extends "app/base.html" %}
+
+{% block actions %}
+  <a class="btn btn-primary mr-4" href="/app/kriteria/{{ item.id }}/update">Edit</a>
+  <a class="btn btn-danger" href="/app/kriteria/{{ item.id }}/remove">Hapus</a>
+{% endblock %}

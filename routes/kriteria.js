@@ -3,6 +3,48 @@ const { db } = require('../db');
 
 module.exports = async (fastify) => {
 
+	fastify.get('/', {
+		handler: async (request, reply) => {
+			const kriterias = await db.kriteria.findMany({
+				include: {
+					subs: true
+				}
+			});
+			reply.view('app/kriteria/list', {
+				title: 'Data Kriteria',
+				subtitle: 'Daftar kriteria',
+				session: request.session,
+				items: kriterias
+			})
+		}
+	})
+
+	fastify.get('/:id/detail', {
+		schema: {
+			querystring: {
+				type: 'object',
+				props: {
+					id: { type: 'number', required: true, minimum: 10 }
+				}
+			}
+		},
+		handler: async (request, reply) => {
+			const id = parseInt(request.params.id);
+			const kriteria = await db.kriteria.findFirst({
+				where: { id },
+				include: {
+					subs: true
+				}
+			})
+			reply.view('app/kriteria/detail', {
+				title: `Kriteria#${kriteria.id} -- ${kriteria.nama}`,
+				subtitle: 'Detail Kriteria',
+				session: request.session,
+				item: kriteria
+			})
+		}
+	})
+
 	fastify.get('/create', {
 		handler: async (request, reply) => {
 			const err_bobot = request.gflash('err_bobot')
@@ -18,7 +60,8 @@ module.exports = async (fastify) => {
 	fastify.post('/create', {
 		preHandler: upload.none(),
 		handler: async (request, reply) => {
-			const { nama, bobot, tipe } = request.body;
+			const payload = request.body;
+			const { nama, bobot, tipe, target } = request.body;
 			const allKrits = await db.kriteria.findMany({})
 			const prevTotalBobot = allKrits.map(it => it.bobot).reduce((a, b) => a + b, 0)
 			const nextBobot = prevTotalBobot + bobot
@@ -31,7 +74,8 @@ module.exports = async (fastify) => {
 				data: {
 					nama,
 					bobot,
-					core: tipe == 'core'
+					core: tipe == 'core',
+					target: parseInt(target)
 				}
 			})
 			reply.redirect('/app/kriteria');

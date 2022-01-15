@@ -18,7 +18,12 @@
               <div class="col-md-8 form-group">
                 <select class="form-control" name="kriteriaId" required>
                   {% for krit in kriterias %}
-                    <option value="{{ krit.id }}">{{ krit.nama }}</option>
+                    <option 
+                      value="{{ krit.id }}"
+                      {% if kriteria == krit.id %}
+                      selected
+                      {% endif %}
+                    >{{ krit.nama }}</option>
                   {% endfor %}
                 </select>
               </div>

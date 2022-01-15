@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -77,6 +77,7 @@ model Kriteria {
   nama String
   core Boolean
   bobot Decimal
+  target Int
 
   subs  Subkriteria[]
 }
