@@ -91,4 +91,12 @@ module.exports = async (fastify) => {
 			reply.redirect('/app');
 		}
 	})
+
+	fastify.get('/logout', {
+		handler: async (request, reply) => {
+			request.destroySession(() => {
+				reply.redirect('/auth/login')
+			})
+		}
+	})
 }

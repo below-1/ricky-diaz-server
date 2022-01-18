@@ -33,7 +33,19 @@ module.exports = async (fastify) => {
 			const sub = await db.subkriteria.create({
 				data: payload
 			})
-			reply.redirect('/app/subkriteria');
+			reply.redirect(`/app/kriteria/${kriteriaId}/detail`);
+		}
+	})
+
+	fastify.get('/:id/remove', {
+		handler: async (request, reply) => {
+			const id = parseInt(request.params.id);
+			const sub = await db.subkriteria.delete({
+				where: {
+					id
+				}
+			});
+			reply.redirect(`/app/kriteria/${sub.kriteriaId}/detail`);
 		}
 	})
 

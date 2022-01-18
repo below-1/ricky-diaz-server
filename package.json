@@ -24,6 +24,7 @@
     "fastify-sensible": "^3.1.2",
     "fastify-session": "^5.2.1",
     "fastify-static": "^4.5.0",
+    "lodash": "^4.17.21",
     "nunjucks": "^3.2.3",
     "pino-pretty": "^7.3.0",
     "point-of-view": "^5.0.0",

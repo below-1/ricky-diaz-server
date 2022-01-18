@@ -1,5 +1,7 @@
 const { upload } = require('../uploads')
 const { db } = require('../db');
+const { Decimal } = require('@prisma/client').Prisma;
+const _ = require('lodash')
 
 module.exports = async (fastify) => {
 
@@ -19,6 +21,41 @@ module.exports = async (fastify) => {
 		}
 	})
 
+	fastify.get('/:id/edit', {
+		handler: async (request, reply) => {
+			const id = parseInt(request.params.id);
+			const kriteria = await db.kriteria.findFirst({
+				where: { id }
+			})
+			reply.view('app/kriteria/edit', {
+				title: `Kriteria#${kriteria.id} -- ${kriteria.nama}`,
+				subtitle: 'Edit Kriteria',
+				session: request.session,
+				item: kriteria
+			})
+		}
+	})
+
+	fastify.post('/:id/edit', {
+		preHandler: upload.none(),
+		handler: async (request, reply) => {
+			const id = parseInt(request.params.id)
+			const { body } = request;
+			await db.kriteria.update({
+				where: {
+					id
+				},
+				data: {
+					nama: body.name,
+					bobot: body.bobot,
+					core: body.tipe == 'core',
+					target: parseInt(body.target)
+				}
+			})
+			reply.redirect(`/app/kriteria/${id}/detail`)
+		}
+	})
+
 	fastify.get('/:id/detail', {
 		schema: {
 			querystring: {
@@ -30,12 +67,13 @@ module.exports = async (fastify) => {
 		},
 		handler: async (request, reply) => {
 			const id = parseInt(request.params.id);
-			const kriteria = await db.kriteria.findFirst({
+			let kriteria = await db.kriteria.findFirst({
 				where: { id },
 				include: {
 					subs: true
 				}
 			})
+			kriteria.subs = _.sortBy(kriteria.subs, it => 5 - it.bobot)
 			reply.view('app/kriteria/detail', {
 				title: `Kriteria#${kriteria.id} -- ${kriteria.nama}`,
 				subtitle: 'Detail Kriteria',
@@ -61,11 +99,13 @@ module.exports = async (fastify) => {
 		preHandler: upload.none(),
 		handler: async (request, reply) => {
 			const payload = request.body;
-			const { nama, bobot, tipe, target } = request.body;
+			let { nama, bobot, tipe, target } = request.body;
 			const allKrits = await db.kriteria.findMany({})
-			const prevTotalBobot = allKrits.map(it => it.bobot).reduce((a, b) => a + b, 0)
-			const nextBobot = prevTotalBobot + bobot
-			if (nextBobot > 100) {
+			console.log(allKrits)
+			const prevTotalBobot = allKrits.map(it => it.bobot).reduce((a, b) => a.add(b), new Decimal('0'))
+
+			const nextBobot = prevTotalBobot.add(new Decimal(bobot))
+			if (nextBobot.greaterThan(new Decimal('100'))) {
 				request.sflash('err_bobot', 'Total bobot melebihi dari 100')
 				reply.redirect('/app/kriteria/create')
 				return
@@ -79,6 +119,29 @@ module.exports = async (fastify) => {
 				}
 			})
 			reply.redirect('/app/kriteria');
+		}
+	})
+
+	fastify.get('/:id/remove', {
+		handler: async (request, reply) => {
+			const id = parseInt(request.params.id)
+			const kriteria = await db.kriteria.findFirst({
+				where: { id }
+			})
+
+			const deleteSubs = db.subkriteria.deleteMany({
+				where: {
+					kriteriaId: kriteria.id 
+				}
+			})
+			const deleteKrit = db.kriteria.delete({
+				where: {
+					id
+				}
+			})
+
+			await db.$transaction([deleteSubs, deleteKrit]);
+			reply.redirect('/app/kriteria')
 		}
 	})
 
