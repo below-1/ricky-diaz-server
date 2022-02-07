@@ -15,7 +15,7 @@
 							</div>
 							<div class="col-md-8">
 								<h6 class="text-muted font-semibold">Mahasiswa</h6>
-								<h6 class="font-extrabold mb-0">112.000</h6>
+								<h6 class="font-extrabold mb-0">{{ totalMahasiswa }}</h6>
 							</div>
 						</div>
 					</div>
@@ -32,7 +32,7 @@
 							</div>
 							<div class="col-md-8">
 								<h6 class="text-muted font-semibold">Diterima</h6>
-								<h6 class="font-extrabold mb-0">183.000</h6>
+								<h6 class="font-extrabold mb-0">{{ totalDiterima }}</h6>
 							</div>
 						</div>
 					</div>
@@ -49,7 +49,7 @@
 							</div>
 							<div class="col-md-8">
 								<h6 class="text-muted font-semibold">Ditolak</h6>
-								<h6 class="font-extrabold mb-0">80.000</h6>
+								<h6 class="font-extrabold mb-0">{{ totalDitolak }}</h6>
 							</div>
 						</div>
 					</div>
@@ -65,8 +65,8 @@
 								</div>
 							</div>
 							<div class="col-md-8">
-								<h6 class="text-muted font-semibold">Kriteria</h6>
-								<h6 class="font-extrabold mb-0">112</h6>
+								<h6 class="text-muted font-semibold">Sedang Diproses</h6>
+								<h6 class="font-extrabold mb-0">{{ totalDraft }}</h6>
 							</div>
 						</div>
 					</div>
@@ -75,4 +75,50 @@
 		</div>
 	</div>
 </section>
+
+<section class="row">
+	{% for cd in kriteriaAggs %}
+		<div class="col-12 col-lg-4">
+			<div class="card">
+			  <div class="card-header">
+			      <h4>{{ cd.label }}</h4>
+			  </div>
+			  <div class="card-body">
+			      <div id="chart-{{ cd.id }}"></div>
+			  </div>
+			</div>
+		</div>
+	{% endfor %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/assets/vendors/apexcharts/apexcharts.js"></script>
+<!-- <script src="/static/assets/js/pages/dashboard.js"></script> -->
+<script src="/static/assets/js/mazer.js"></script>
+<script>
+	var chartData = {{ kriteriaAggs | dump | safe }};
+	for (let cd of chartData) {
+		const c = new ApexCharts(document.getElementById(`chart-${cd.id}`), {
+			series: cd.aggs.map(it => it.total),
+			labels: cd.aggs.map(it => it.nama),
+			chart: {
+				type: 'donut',
+				width: '100%',
+				height:'350px'
+			},
+			legend: {
+				position: 'bottom'
+			},
+			plotOptions: {
+				pie: {
+					donut: {
+						size: '30%'
+					}
+				}
+			}
+		});
+		c.render();
+	}
+</script>
 {% endblock %}

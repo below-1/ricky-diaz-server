@@ -82,7 +82,9 @@ module.exports = async (fastify) => {
 			let mahasiswa = null;
 			if (user.role == 'MAHASISWA' && user.mahasiswaId) {
 				mahasiswa = await db.mahasiswa.findFirst({
-					id: user.mahasiswaId
+					where: {
+						id: user.mahasiswaId
+					}
 				})
 			}
 			request.session.user = user;

@@ -43,10 +43,10 @@ enum Role {
   MAHASISWA
 }
 
-enum StatusBerkas {
+enum StatusPenerima {
   DRAFT
-  VALID
-  INVALID
+  DITERIMA
+  DITOLAK
 }
 
 model Mahasiswa {
@@ -65,6 +65,7 @@ model Mahasiswa {
   semester  String
 
   penilaians Penilaian[]
+  statusPenerima StatusPenerima @default(DRAFT)
 
   user User?
 }
